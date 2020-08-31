@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Dict, List, Mapping
 
 from .entities import Change
-from .category_table import CategoryTable
 
 
 class ChangesReader:
@@ -14,7 +13,7 @@ class ChangesReader:
 
 
 class TownCrierChangesReader(ChangesReader):
-    def __init__(self, path: Path, category_table: CategoryTable):
+    def __init__(self, path: Path, category_table: Mapping[str, str]):
         self._path = path
         super().__init__(category_table=category_table)
 
@@ -22,6 +21,7 @@ class TownCrierChangesReader(ChangesReader):
         result: Dict[str, List[Change]] = {}
 
         for file in self._path.iterdir():
+            breakpoint()
             identifier, _, category = file.name.rpartition(".")
             if category in self.category_table:
                 with open(file, "r") as f:

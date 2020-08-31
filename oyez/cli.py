@@ -4,7 +4,6 @@ from typing import Mapping
 import click
 from dependency_injector import containers, providers
 
-from .category_table import CategoryTable
 from .changes_reader import TownCrierChangesReader
 from .entities import Category
 
