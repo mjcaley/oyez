@@ -1,18 +1,16 @@
 from pathlib import Path
 
-import jinja2
-
 from .entities import ReleaseLog
 
 
-class Composer:
-    def compose(self, release: ReleaseLog) -> str:
+class Writer:
+    def write(self, release: ReleaseLog) -> None:
         raise NotImplementedError
 
 
-class RestructureTextWriter(Composer):
+class RestructureTextWriter(Writer):
     def __init__(self, path: Path) -> None:
         self._path = path
 
-    def compose(self, release: ReleaseLog) -> str:
+    def write(self, release: ReleaseLog) -> None:
         pass
