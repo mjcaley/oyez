@@ -4,18 +4,21 @@ from typing import Mapping
 import click
 from dependency_injector import containers, providers
 
-from .changes_reader import TownCrierChangesReader
+from .changes import TownCrierChangesReader
 from .entities import Category
+from .package import ConfiguredPackage, PythonPackage
 
 
 class ApplicationContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
-    reader = providers.Factory(
+    changes = providers.Factory(
         TownCrierChangesReader, config.path.as_(Path), category_table=config.categories
     )
-    # writer
-    # processor
+    package_info = providers.Factory(PythonPackage, config.package)
+    # composer - RSTWriter, config.output_path
+    # processor - changes, package_info, writer
+    # run - Callable, main
 
 
 builtin_config = {
@@ -51,6 +54,10 @@ def run(package, version, name, path):
     # container.config.from_dict(cli_config)
 
     container.config.from_dict({"path": "./test_data/"})
+    container.config.from_dict({"package": "test_module"})
 
-    cats = container.reader().read()
+    cats = container.changes().read()
     print(cats)
+
+    package = container.package_info().package_info()
+    print(package.name, package.version)
