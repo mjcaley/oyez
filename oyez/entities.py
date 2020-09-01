@@ -70,11 +70,11 @@ class ReleaseLog:
         self,
         package: Package,
         changes: Mapping[Category, List[Change]],
-        log_date: date = date.today(),
+        log_date: date = None,
     ) -> None:
         self._package = package
         self._changes = changes
-        self._log_date = log_date
+        self._log_date = log_date or date.today()
 
     @property
     def package(self) -> Package:

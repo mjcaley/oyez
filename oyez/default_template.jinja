@@ -1,0 +1,16 @@
+{{ package.name }} - {{ package.version }} ({{ log_date }})
+{{ "=" * ((package.name + package.version + log_date) | length + 6) }}
+
+{% for category, change_list in changes.items() %}
+{{ category }}
+{{ "-" * (category | length) }}
+
+{% if change_list | length != 0 %}
+{% for change in change_list %}
+* {{ change.identifier }} : {{ change.description }}
+{% endfor %}
+{% else %}
+No significant changes.
+{% endif %}
+
+{% endfor %}
