@@ -6,6 +6,9 @@ from .entities import ReleaseLog
 
 
 class Writer:
+    def draft(self, release: ReleaseLog) -> str:
+        raise NotImplementedError
+
     def write(self, release: ReleaseLog) -> None:
         raise NotImplementedError
 
@@ -16,17 +19,24 @@ class TemplateWriter(Writer):
         with open(template, "r") as f:
             self._template = Template(f.read(), trim_blocks=True)
 
+    def draft(self, release: ReleaseLog) -> str:
+        return self._template.render(
+            package = release.package,
+            log_date = release.log_date,
+            changes = release.changes,
+        )
+
     def write(self, release: ReleaseLog) -> None:
         rendered_template = self._template.render(
             package = release.package,
             log_date = release.log_date,
-            changes = release.changes
+            changes = release.changes,
         )
         self.prepend(rendered_template)
 
     def prepend(self, content: str) -> None:
         try:
-            with open(self._path, "r") as f:
+            with open(self._path, "r+") as f:
                 existing_content = f.read()
         except FileNotFoundError:
             existing_content = ""
